@@ -1,13 +1,38 @@
 import tkinter as tk
+from tkinter import messagebox
+
 
 def add_expense():
     description = description_entry.get()
     amount = amount_entry.get()
 
-    if description:
-        expense_list.insert(tk.END, f"{description} - ${amount}")  
-        description_entry.delete(0, tk.END)
-        amount_entry.delete(0, tk.END)
+    if description == "":
+        messagebox.showerror(
+            "Invalid description.",
+            "Please enter a valid description."
+        )
+        return
+
+    try:
+        amount = float(amount)
+    except ValueError:
+        messagebox.showerror(
+            "Invalid amount.",
+            "Please enter valid number(s)."
+        )
+        return
+
+    if amount <= 0:
+        messagebox.showerror(
+            "Invalid amount.",
+            "Amount must be greater than 0."
+        )
+        return
+
+    expense_list.insert(tk.END, f"{description} - ${amount:.2f}")
+    description_entry.delete(0, tk.END)
+    amount_entry.delete(0, tk.END)
+
 
 window = tk.Tk()
 
@@ -23,7 +48,7 @@ title = tk.Label(
 title.pack()
 
 description = tk.Label(
-    window, 
+    window,
     text="Description"
 )
 
