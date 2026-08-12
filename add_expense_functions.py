@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 
-def add_expense(description_entry, amount_entry, category_entry, expense_list, total_amount):
+def add_expense(description_entry, amount_entry, category_entry, expense_list, total_amount, expenses):
     description = description_entry.get()
     amount = amount_entry.get()
     category = category_entry.get()
@@ -36,27 +36,37 @@ def add_expense(description_entry, amount_entry, category_entry, expense_list, t
         )
         return
 
+    expenses.append({
+        "description": description,
+        "amount": amount,
+        "category": category
+    })
+
+    print(expenses)
+
     expense_list.insert(tk.END, f"{description} - ${amount:.2f} - {category}")
     description_entry.delete(0, tk.END)
     amount_entry.delete(0, tk.END)
     category_entry.set("Food")
 
-    update_total(expense_list, total_amount)
+    update_total(expenses, total_amount)
 
 
-def delete_expense(expense_list, total_amount):
+def delete_expense(expense_list, total_amount, expenses):
     selected = expense_list.curselection()
 
     if selected:
-        expense_list.delete(selected)
-        update_total(expense_list, total_amount)
+        index = selected[0]
 
-def update_total(expense_list, total_amount):
+        expense_list.delete(index)
+        expenses.pop(index)
+
+        update_total(expenses, total_amount)
+
+def update_total(expenses, total_amount):
     total = 0
 
-    for expense in expense_list.get(0, tk.END):
-        amount = expense.split(" - ")[1]
-        amount = amount.replace("$", "")
-        total += float(amount)
+    for expense in expenses:
+        total += expense["amount"]
 
     total_amount.config(text=f"Total: ${total:.2f}")

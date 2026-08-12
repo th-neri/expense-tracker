@@ -1,6 +1,12 @@
 import tkinter as tk
 from tkinter import ttk
 from add_expense_functions import add_expense, delete_expense
+import database
+
+expenses = []
+
+connection = database.connect()
+database.create_tables(connection)
 
 window = tk.Tk()
 
@@ -75,7 +81,8 @@ button = tk.Button(
         amount_entry,
         category_entry,
         expense_list,
-        total_amount
+        total_amount,
+        expenses
     )
 )
 
@@ -88,9 +95,10 @@ expense_list.pack()
 delete_button = tk.Button(
     window,
     text="Delete expense",
-    command=lambda: delete_expense(expense_list, total_amount)
+    command=lambda: delete_expense(expense_list, total_amount, expenses)
 )
 
 delete_button.pack()
+
 
 window.mainloop()
