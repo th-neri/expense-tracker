@@ -19,3 +19,11 @@ def create_tables(connection):
 def add_expense(connection, description, amount, category):
     with connection:
         connection.execute("INSERT INTO expenses(description, amount, category) VALUES(?, ?, ?)", (description, amount, category))
+
+def get_expenses(connection):
+    with connection:
+        return connection.execute("SELECT expense_id, description, amount, category FROM expenses").fetchall()
+
+def delete_expense(connection, expense_id):
+    with connection:
+        connection.execute("DELETE FROM expenses WHERE expense_id=?", (expense_id,))
