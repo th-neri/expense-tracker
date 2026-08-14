@@ -27,3 +27,7 @@ def get_expenses(connection):
 def delete_expense(connection, expense_id):
     with connection:
         connection.execute("DELETE FROM expenses WHERE expense_id=?", (expense_id,))
+
+def update_expense(connection, expense_id, description, amount, category):
+    with connection:
+        connection.execute("UPDATE expenses SET description=?, amount=?, category=? WHERE expense_id=?", (description, amount, category, expense_id,))
