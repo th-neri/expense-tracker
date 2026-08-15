@@ -1,9 +1,10 @@
 import tkinter as tk
 from tkinter import ttk
-from add_expense_functions import add_expense, delete_expense, load_expenses, edit_expense, save_edit
+from expenses_functions import add_expense, delete_expense, load_expenses, edit_expense, save_edit, search_expenses
 import database
 
 expenses = []
+filtered_expenses = []
 
 connection = database.connect()
 database.create_tables(connection)
@@ -89,6 +90,22 @@ button = tk.Button(
 
 button.pack()
 
+search = tk.Label(
+    window,
+    text="Search"
+)
+
+search.pack()
+
+search_entry = tk.Entry(window)
+
+search_entry.pack()
+
+search_entry.bind(
+    "<KeyRelease>",
+    lambda event: search_expenses(search_entry, expense_list, expenses, filtered_expenses)
+)
+
 expense_list = tk.Listbox(window)
 
 expense_list.pack()
@@ -98,7 +115,7 @@ load_expenses(connection, expense_list, total_amount, expenses)
 delete_button = tk.Button(
     window,
     text="Delete expense",
-    command=lambda: delete_expense(connection, expense_list, total_amount, expenses)
+    command=lambda: delete_expense(connection, expense_list, total_amount, expenses, filtered_expenses)
 )
 
 delete_button.pack()
@@ -106,7 +123,7 @@ delete_button.pack()
 edit_button = tk.Button(
     window,
     text="Edit expense",
-    command=lambda: edit_expense(expense_list, description_entry, amount_entry, category_entry, expenses)
+    command=lambda: edit_expense(expense_list, description_entry, amount_entry, category_entry, expenses, filtered_expenses)
 )
 
 edit_button.pack()
@@ -114,7 +131,7 @@ edit_button.pack()
 save_edit_button = tk.Button(
     window,
     text="Save edit",
-    command=lambda: save_edit(connection, expense_list, description_entry, amount_entry, category_entry, total_amount, expenses)
+    command=lambda: save_edit(connection, expense_list, description_entry, amount_entry, category_entry, total_amount, expenses, filtered_expenses)
 )
 
 save_edit_button.pack()
